@@ -34,7 +34,7 @@ nsubst,N_LOAD_STEP
 outres,all,all
 
 *do,I,1,N_BRK
-    f,N_LOAD_BRK_%I%,fz,-LOAD_BRK*1.6
+    f,N_LOAD_BRK_%I%,fz,-LOAD_BRK_LINE*BRK_SPC*1.6
 *enddo
 allsel
 
