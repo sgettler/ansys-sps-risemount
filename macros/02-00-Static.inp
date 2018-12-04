@@ -45,4 +45,5 @@ cmsel,a,V_SPS
 eslv
 nsle
 /input,_display,inp,macros
+save,02-00-Static,db
 finish
