@@ -1,0 +1,48 @@
+!-------------------------------------------------------------------------------
+! Project Name:         SPS Terrace Rise-Mounted Seat Check
+! Project Number:       n/a
+!
+! Author:               SG
+! Date Created:         2018-12-03
+! Date Modified:
+!
+! Description:          Seat bracket loads.
+!
+! File Inputs:          01-00-Model.db
+! File Outputs:
+!-------------------------------------------------------------------------------
+
+finish
+/clear
+
+
+
+! incremented uniform load
+!---------------------------------------
+
+resume,01-00-Model,db
+/input,00-02-loadparams,inp,macros
+/title,%PROJTITLE% | Static Load
+
+/solu
+
+N_LOAD_STEP = 1
+
+antype,static
+solcontrol,off,off
+nsubst,N_LOAD_STEP
+outres,all,all
+
+*do,I,1,N_BRK
+    f,N_LOAD_BRK_%I%,fz,-LOAD_BRK*1.6
+*enddo
+allsel
+
+solve
+
+vsel,none
+cmsel,a,V_SPS
+eslv
+nsle
+/input,_display,inp,macros
+finish
