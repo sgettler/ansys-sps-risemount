@@ -1,0 +1,56 @@
+!---------------------------------------
+! GEOMETRY PARAMETERS
+!---------------------------------------
+
+*afun,deg
+
+PROJTITLE = 'SPS Terrace Rise-Mounted Seats'
+PROJFILE = 'risemount'
+
+CONV = 0.001
+TOL = 0.001*CONV
+
+
+
+! sps terraces
+!---------------------------------------
+
+! sps
+SPS_TP = 3.2*CONV               ! top plate thickness
+SPS_CORE = 19*CONV              ! core thickness
+SPS_BP = 3.2*CONV               ! bottom plate thickness
+
+
+! terraces
+SPS_L = 23.5*12*25.4*CONV       ! length
+
+SPS_W = 33*25.4*CONV            ! tread width
+SPS_H = 18*25.4*CONV            ! rise height
+SPS_S = 0.02                    ! tread slope
+
+SPS_PL_LAP = 40*CONV            ! upturn
+SPS_PL_GAP = 10*CONV            ! upturn gap
+
+SPS_RB_EDGE = 25*CONV           ! rise bolt edge distance
+SPS_RB_END = 150*CONV           ! rise bolt end distance
+SPS_RB_SPC = 500*CONV           ! rise bolt max spacing
+
+
+
+! seat brackets
+!---------------------------------------
+
+BRK_END = 0                     ! bracket first location (0 = centred in bay)
+BRK_SPC = 21*25.4*CONV          ! bracket spacing
+
+BRK_W = 3.5*25.4*CONV           ! bracket width
+BRK_H = 4.75*25.4*CONV          ! bracket height
+BRK_T = 0.375*25.4*CONV         ! bracket thickness
+BRK_Z = 1*25.4*CONV             ! bracket bottom elevation
+
+BRK_BB_Z = 3.5*25.4*CONV        ! bracket bolt bottom bolt elevation
+BRK_BB_SPV = 0                  ! bracket bolt vertical spacing (0 = single)
+BRK_BB_SPH = 2.5*25.4*CONV      ! bracket bolt horizontal spacing (0 = single)
+
+BRK_ST_L = 20*25.4*CONV         ! seat/stanchion length
+BRK_ST_T = 0.375*25.4*CONV      ! stanchion thickness

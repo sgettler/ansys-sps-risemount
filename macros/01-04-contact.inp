@@ -1,0 +1,52 @@
+!---------------------------------------
+! CONTACT
+!---------------------------------------
+
+
+
+! sliding contact
+!---------------------------------------
+
+! sps
+*do,I,1,N_BRK
+
+    ! contact id
+    *get,RCO0,rcon,0,num,max
+    RCO_CON_BRK_%I% = 200+I
+    r,RCO_CON_BRK_%I%,RCO_CON_BRK_%I%
+
+    ! nodes
+    mat,MAT_STEEL
+    type,ETY_CONT
+    real,RCO_CON_BRK_%I%
+
+    vsel,none
+    cmsel,a,V_SPS_TP
+    eslv
+    nsle
+    nsel,r,loc,x,BRK_X%I%-BRK_W/2-E_MAXSIZE,BRK_X%I%+BRK_W/2+E_MAXSIZE
+    nsel,r,loc,y,SPS_W-TOL,SPS_W+TOL
+    nsel,r,loc,z,SPS_S*SPS_W+BRK_Z-E_MAXSIZE,SPS_S*SPS_W+BRK_Z+BRK_H+E_MAXSIZE
+
+    esurf,all
+
+*enddo
+
+
+! brackets
+*do,I,1,N_BRK
+
+    ! nodes
+    mat,MAT_STEEL
+    type,ETY_TARG
+    real,RCO_CON_BRK_%I%
+
+    vsel,none
+    cmsel,a,V_BRK_%I%
+    eslv
+    nsle
+    nsel,r,loc,y,SPS_W-TOL,SPS_W+TOL
+
+    esurf,all
+
+*enddo

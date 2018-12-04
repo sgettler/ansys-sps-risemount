@@ -1,0 +1,42 @@
+!-------------------------------------------------------------------------------
+! Project Name:         SPS Terrace Rise-Mounted Seats
+! Project Number:       n/a
+!
+! Author:               SG
+! Date Created:         2018-11-30
+! Date Modified:
+!
+! Description:          Solid static model checks terrace rise for seating
+!                       loads.
+!
+! File Inputs:          00-01-geoparams.inp, 01-01-attributes.inp,
+!                       01-02-geometry.inp, 01-03-mesh.inp, 01-04-contact.inp,
+!                       01-05-boundary.inp, 01-06-couple.inp
+! File Outputs:         01-00-Model.db
+!-------------------------------------------------------------------------------
+
+finish
+/clear
+
+
+
+! generate model
+!---------------------------------------
+
+/input,00-01-geoparams,inp,macros
+/title,%PROJTITLE% | Solid Static Model
+/filname,PROJFILE,1
+
+/prep7
+
+/input,01-01-attributes,inp,macros
+/input,01-02-geometry,inp,macros
+/input,01-03-mesh,inp,macros
+/input,01-04-contact,inp,macros
+/input,01-05-boundary,inp,macros
+/input,01-06-couple,inp,macros
+
+allsel
+/input,_display,inp,macros
+save,01-00-Model,db
+finish

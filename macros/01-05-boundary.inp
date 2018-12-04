@@ -1,0 +1,47 @@
+!---------------------------------------
+! BOUNDARY CONDITIONS
+!---------------------------------------
+
+
+! sps
+!---------------------------------------
+
+! simple support
+wprota,0,atan(SPS_S),0
+csys,wp
+
+nsel,all
+nsel,r,loc,x,-TOL,TOL
+nsel,r,loc,z,-(SPS_TP+SPS_CORE+SPS_BP)-TOL,-(SPS_TP+SPS_CORE+SPS_BP)+TOL
+d,all,uz
+nsel,r,loc,y,SPS_W/2/cos(atan(SPS_S))-TOL,SPS_W/2/cos(atan(SPS_S))+TOL
+d,all,ux
+d,all,uy
+
+nsel,all
+nsel,r,loc,x,SPS_L-TOL,SPS_L+TOL
+nsel,r,loc,z,-(SPS_TP+SPS_CORE+SPS_BP)-TOL,-(SPS_TP+SPS_CORE+SPS_BP)+TOL
+d,all,uz
+nsel,r,loc,y,SPS_W/2/cos(atan(SPS_S))-TOL,SPS_W/2/cos(atan(SPS_S))+TOL
+d,all,uy
+
+csys,0
+wpcsys
+
+
+wpoffs,,SPS_W,SPS_H
+wprota,0,atan(SPS_S),0
+csys,wp
+
+nsel,all
+nsel,r,loc,x,-TOL,TOL
+nsel,r,loc,z,-(SPS_TP+SPS_CORE+SPS_BP)-TOL,-(SPS_TP+SPS_CORE+SPS_BP)+TOL
+d,all,uz
+
+nsel,all
+nsel,r,loc,x,SPS_L-TOL,SPS_L+TOL
+nsel,r,loc,z,-(SPS_TP+SPS_CORE+SPS_BP)-TOL,-(SPS_TP+SPS_CORE+SPS_BP)+TOL
+d,all,uz
+
+csys,0
+wpcsys

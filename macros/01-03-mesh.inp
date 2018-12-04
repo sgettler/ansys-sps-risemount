@@ -1,0 +1,52 @@
+!---------------------------------------
+! GENERATE MESH
+!---------------------------------------
+
+E_MAXSIZE = (SPS_TP+SPS_CORE+SPS_BP)*2
+
+! sps
+!---------------------------------------
+
+! mesh
+vsel,none
+cmsel,a,V_SPS_TP
+cmsel,a,V_SPS_CORE
+cmsel,a,V_SPS_BP
+aslv
+lsla
+lesize,all,E_MAXSIZE,,,,2
+
+vsel,none
+cmsel,a,V_SPS_CORE_2
+aslv
+lsla
+lesize,all,,,2,,2
+
+allsel
+vsweep,V_SPS
+
+
+
+! seat brackets
+!---------------------------------------
+
+! mesh
+*do,I,1,N_BRK
+    vsel,none
+    cmsel,a,V_BRK_%I%
+    aslv
+    lsla
+    lesize,all,E_MAXSIZE
+
+    allsel
+    vsweep,V_BRK_%I%
+
+    *if,BRK_BB_SPH,eq,0,then
+        nsel,r,loc,x,BRK_X%I%-BRK_W/2+BRK_ST_T/2-TOL,BRK_X%I%-BRK_W/2+BRK_ST_T/2+TOL
+    *else
+        nsel,r,loc,x,BRK_X%I%-TOL,BRK_X%I%+TOL
+    *endif
+    nsel,r,loc,y,SPS_W-BRK_ST_L-TOL,SPS_W-BRK_ST_L+TOL
+    nsel,r,loc,z,SPS_S*SPS_W+BRK_Z+BRK_H-TOL,SPS_S*SPS_W+BRK_Z+BRK_H+TOL
+    cm,N_LOAD_BRK_%I%,node
+*enddo
