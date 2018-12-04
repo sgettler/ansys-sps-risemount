@@ -28,6 +28,8 @@ SPS_W = 33*25.4*CONV            ! tread width
 SPS_H = 18*25.4*CONV            ! rise height
 SPS_S = 0.02                    ! tread slope
 
+
+! terrace standard values
 SPS_PL_LAP = 40*CONV            ! upturn
 SPS_PL_GAP = 10*CONV            ! upturn gap
 
@@ -52,5 +54,7 @@ BRK_BB_Z = 3.5*25.4*CONV        ! bracket bolt bottom bolt elevation
 BRK_BB_SPV = 0                  ! bracket bolt vertical spacing (0 = single)
 BRK_BB_SPH = 2.5*25.4*CONV      ! bracket bolt horizontal spacing (0 = single)
 
+
+! stanchion standard values
 BRK_ST_L = 20*25.4*CONV         ! seat/stanchion length
 BRK_ST_T = 0.375*25.4*CONV      ! stanchion thickness
