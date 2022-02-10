@@ -7,7 +7,7 @@ written in ANSYS APDL.
 
 #### Installation and Use
 
-To use the macros, clone this repo and use the root folder as your ANSYS
+To use the macros, clone this repo and use the `model` folder as your ANSYS
 working directory. To build the model, run `01-00-Model.inp` and to solve the
 static loading, run `02-00-Static.inp`.
 
@@ -17,9 +17,7 @@ Structural Solver (though there is not yet any postprocessing function).
 #### Parameters
 
 Parameters for modifying the model geometry are found in the
-`00-01-geoparams.inp` file. All dimensions are assumed to be in metres, but
-strictly speaking, ANSYS doesn't care about units as long as they are
-consistent.
+`00-01-geoparams.inp` file. All dimensions are assumed to be in metres.
 
 ###### SPS Terrace Dimensions
 |Name|Description|
