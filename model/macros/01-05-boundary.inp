@@ -2,7 +2,6 @@
 ! BOUNDARY CONDITIONS
 !---------------------------------------
 
-
 ! sps
 !---------------------------------------
 
@@ -45,3 +44,37 @@ d,all,uz
 
 csys,0
 wpcsys
+
+
+
+! continuity
+!---------------------------------------
+
+cmsel,s,V_SPS
+eslv
+
+nsle
+nsel,r,loc,y,SPS_W/2-TOL,SPS_W/2+TOL
+*get,NBG_N,node,,count
+*dim,NBG_INFO,array,NBG_N,2
+*vget,NBG_INFO(1,1),node,,nlist
+
+*do,I,1,NBG_N
+    *get,TMPX,node,NBG_INFO(I,1),loc,x
+    *get,TMPY,node,NBG_INFO(I,1),loc,y
+    *get,TMPZ,node,NBG_INFO(I,1),loc,z
+    nsle
+    nsel,r,loc,x,TMPX-TOL,TMPX+TOL
+    nsel,r,loc,y,TMPY+SPS_W-TOL,TMPY+SPS_W+TOL
+    nsel,r,loc,z,TMPZ+SPS_H-TOL,TMPZ+SPS_H+TOL
+    *get,NBG_INFO(I,2),node,,num,max
+*enddo
+TMPX=
+TMPY=
+TMPZ=
+
+*do,I,1,NBG_N
+    ce,next,,NBG_INFO(I,1),ux,1,NBG_INFO(I,2),ux,-1
+    ce,next,,NBG_INFO(I,1),uy,1,NBG_INFO(I,2),uy,-1
+    ce,next,,NBG_INFO(I,1),uz,1,NBG_INFO(I,2),uz,-1
+*enddo
