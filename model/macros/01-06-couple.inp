@@ -2,32 +2,35 @@
 ! NODE COUPLING
 !---------------------------------------
 
-
-
 ! seat brackets
 !---------------------------------------
 
 ! seat bracket bolts
-*do,I,1,N_BRK
-    nsel,all
-    nsel,r,loc,x,BRK_X%I%-BRK_BB_SPH/2+TOL,BRK_X%I%-BRK_BB_SPH/2-TOL
-    nsel,r,loc,z,SPS_S*SPS_W+BRK_BB_Z-TOL,SPS_S*SPS_W+BRK_BB_Z+TOL
+*do,I,1,BRK_N
+    vsel,none
+    cmsel,a,V_SPS
+    cmsel,a,V_BRK_%I%
+    eslv
+
+    nsle
+    nsel,r,loc,x,BRK_X(I)-BRK_BSH/2+TOL,BRK_X(I)-BRK_BSH/2-TOL
+    nsel,r,loc,y,SPS_W-TOL,SPS_W+TOL
+    nsel,r,loc,z,SPS_S*SPS_W+BRK_BZ-TOL,SPS_S*SPS_W+BRK_BZ+TOL
     cp,,all,all
 
-    *if,BRK_BB_SPH,ne,0,and,BRK_BB_SPV,ne,0,then
-        nsel,all
-        nsel,r,loc,x,BRK_X%I%+BRK_BB_SPH/2+TOL,BRK_X%I%+BRK_BB_SPH/2-TOL
-        nsel,r,loc,z,SPS_S*SPS_W+BRK_BB_Z+BRK_BB_SPV-TOL,SPS_S*SPS_W+BRK_BB_Z+BRK_BB_SPV+TOL
-        cp,,all,all
-    *elseif,BRK_BB_SPH,ne,0,then
-        nsel,all
-        nsel,r,loc,x,BRK_X%I%+BRK_BB_SPH/2+TOL,BRK_X%I%+BRK_BB_SPH/2-TOL
-        nsel,r,loc,z,SPS_S*SPS_W+BRK_BB_Z-TOL,SPS_S*SPS_W+BRK_BB_Z+TOL
-        cp,,all,all
-    *elseif,BRK_BB_SPV,ne,0,then
-        nsel,all
-        nsel,r,loc,x,BRK_X%I%-BRK_BB_SPH/2+TOL,BRK_X%I%-BRK_BB_SPH/2-TOL
-        nsel,r,loc,z,SPS_S*SPS_W+BRK_BB_Z+BRK_BB_SPV-TOL,SPS_S*SPS_W+BRK_BB_Z+BRK_BB_SPV+TOL
-        cp,,all,all
+    nsle
+    *if,BRK_BSH,ne,0,and,BRK_BSV,ne,0,then
+        nsel,r,loc,x,BRK_X(I)+BRK_BSH/2+TOL,BRK_X(I)+BRK_BSH/2-TOL
+        nsel,r,loc,y,SPS_W-TOL,SPS_W+TOL
+        nsel,r,loc,z,SPS_S*SPS_W+BRK_BZ+BRK_BSV-TOL,SPS_S*SPS_W+BRK_BZ+BRK_BSV+TOL
+    *elseif,BRK_BSH,ne,0,then
+        nsel,r,loc,x,BRK_X(I)+BRK_BSH/2+TOL,BRK_X(I)+BRK_BSH/2-TOL
+        nsel,r,loc,y,SPS_W-TOL,SPS_W+TOL
+        nsel,r,loc,z,SPS_S*SPS_W+BRK_BZ-TOL,SPS_S*SPS_W+BRK_BZ+TOL
+    *elseif,BRK_BSV,ne,0,then
+        nsel,r,loc,x,BRK_X(I)-BRK_BSH/2+TOL,BRK_X(I)-BRK_BSH/2-TOL
+        nsel,r,loc,y,SPS_W-TOL,SPS_W+TOL
+        nsel,r,loc,z,SPS_S*SPS_W+BRK_BZ+BRK_BSV-TOL,SPS_S*SPS_W+BRK_BZ+BRK_BSV+TOL
     *endif
+    cp,,all,all
 *enddo

@@ -2,364 +2,362 @@
 ! MODEL GEOMETRY
 !---------------------------------------
 
-*afun,deg
-
-
-
-! calculated values
+! computed values
 !---------------------------------------
 
 ! rise bolt locations
-SPS_RB_EQS = max(mod(SPS_L-2*SPS_RB_END,SPS_RB_SPC)/2,mod(mod(SPS_L-2*SPS_RB_END,SPS_RB_SPC)/2+SPS_RB_SPC/2,SPS_RB_SPC))
-N_SPS_RB = (SPS_L-2*SPS_RB_END-2*SPS_RB_EQS)/SPS_RB_SPC+1
+SPS_RBOLTSN = (SPS_L-2*SPS_RBOLTE)/SPS_RBOLTS-mod((SPS_L-2*SPS_RBOLTE)/SPS_RBOLTS,1)-1
+SPS_RBOLT2 = (SPS_L-2*SPS_RBOLTE-SPS_RBOLTSN*SPS_RBOLTS)/2
 
-SPS_RB_X1 = SPS_RB_END
-SPS_RB_X2 = SPS_RB_END+SPS_RB_EQS
-*do,I,3,N_SPS_RB-1
-    SPS_RB_X%I% = SPS_RB_X%I-1%+SPS_RB_SPC
+SPS_RBOLTN = 2+SPS_RBOLTSN+1
+*dim,SPS_RBOLTX,array,SPS_RBOLTN
+*set,SPS_RBOLTX(1),SPS_RBOLTE
+*do,I,0,SPS_RBOLTSN
+    *set,SPS_RBOLTX(1+I+1),SPS_RBOLTE+SPS_RBOLT2+I*SPS_RBOLTS
 *enddo
-SPS_RB_X%N_SPS_RB% = SPS_L-SPS_RB_END
+*set,SPS_RBOLTX(SPS_RBOLTN),SPS_L-SPS_RBOLTE
+SPS_RBOLTSN=
+SPS_RBOLT2=
 
 
 ! seat bracket locations
-*if,BRK_END,eq,0,then
-    BRK_EQS = max(mod(SPS_L,BRK_SPC)/2,mod(mod(SPS_L,BRK_SPC)/2+BRK_SPC/2,BRK_SPC))
-    N_BRK = (SPS_L-2*BRK_EQS)/BRK_SPC+1
+BRK_SN = (SPS_L-BRK_END)/BRK_SPC-mod((SPS_L-BRK_END)/BRK_SPC,1)-1
+*if,BRK_END,ne,0,then
+    BRK_1 = BRK_END
 *else
-    BRK_EQS = 0
-    N_BRK = (SPS_L-BRK_END)/BRK_SPC-mod((SPS_L-BRK_END)/BRK_SPC,1)
+    BRK_1 = (SPS_L-BRK_SN*BRK_SPC)/2
 *endif
 
-BRK_X1 = BRK_END+BRK_EQS
-*do,I,2,N_BRK
-    BRK_X%I% = BRK_X%I-1%+BRK_SPC
+BRK_N = BRK_SN+1
+*dim,BRK_X,array,BRK_N
+*do,I,0,BRK_SN
+    *set,BRK_X(I+1),BRK_1+I*BRK_SPC
 *enddo
+BRK_SN=
+BRK_1=
 
 
 
 ! sps
 !---------------------------------------
 
-! TOP PLATE SECTION
-
-! lap
+! top plate part 1
 *get,KP0,kp,,num,max
-k,KP0+1, 0,SPS_W+SPS_TP,SPS_W*SPS_S+SPS_PL_LAP
-k,KP0+2, 0,SPS_W+SPS_TP,SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)
-k,KP0+3, 0,SPS_W,SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)
-k,KP0+4, 0,SPS_W,SPS_W*SPS_S+SPS_PL_LAP
+k,KP0+1,0,SPS_W+SPS_TP,SPS_W*SPS_S+SPS_LAP
+k,KP0+2,0,SPS_W+SPS_TP,SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)
+k,KP0+3,0,SPS_W,SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)
+k,KP0+4,0,SPS_W,SPS_W*SPS_S+SPS_LAP
+
 lsel,none
 l,KP0+1,KP0+2
 l,KP0+2,KP0+3
 l,KP0+3,KP0+4
 l,KP0+4,KP0+1
+
 asel,none
 al,all
-
 cm,A_VOL_SPS_TP_1,area
 
 
-! heel radius
+! top plate part 2
 *get,KP0,kp,,num,max
-k,KP0+1, 0,SPS_W-(1.5*SPS_TP),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2) ! centre
-k,KP0+2, 0,SPS_W+SPS_TP,SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)
-k,KP0+3, 0,SPS_W-(1.5*SPS_TP)+(2.5*SPS_TP)*sin(atan(SPS_S)),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)-(2.5*SPS_TP)*cos(atan(SPS_S))
-k,KP0+4, 0,SPS_W-(1.5*SPS_TP)+(1.5*SPS_TP)*sin(atan(SPS_S)),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)-(1.5*SPS_TP)*cos(atan(SPS_S))
-k,KP0+5, 0,SPS_W,SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)
+k,KP0+1,0,SPS_W-(1.5*SPS_TP),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2) ! arc centre
+k,KP0+2,0,SPS_W+SPS_TP,SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)
+k,KP0+3,0,SPS_W-(1.5*SPS_TP)+(2.5*SPS_TP)*sin(atan(SPS_S)),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)-(2.5*SPS_TP)*cos(atan(SPS_S))
+k,KP0+4,0,SPS_W-(1.5*SPS_TP)+(1.5*SPS_TP)*sin(atan(SPS_S)),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)-(1.5*SPS_TP)*cos(atan(SPS_S))
+k,KP0+5,0,SPS_W,SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)
+
 lsel,none
 larc,KP0+2,KP0+3,KP0+1,2.5*SPS_TP
 l,KP0+3,KP0+4
 larc,KP0+4,KP0+5,KP0+1,1.5*SPS_TP
 l,KP0+5,KP0+2
+
 asel,none
 al,all
-
 cm,A_VOL_SPS_TP_2,area
 
 
-! top
+! top plae part 3
 *get,KP0,kp,,num,max
-k,KP0+1, 0,SPS_W-(1.5*SPS_TP)+(1.5*SPS_TP)*sin(atan(SPS_S)),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)-(1.5*SPS_TP)*cos(atan(SPS_S))
-k,KP0+2, 0,SPS_W-(1.5*SPS_TP)+(2.5*SPS_TP)*sin(atan(SPS_S)),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)-(2.5*SPS_TP)*cos(atan(SPS_S))
-k,KP0+3, 0,2.5*SPS_TP-(1.5*SPS_TP)*sin(atan(SPS_S)),-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)+(1.5*SPS_TP)*cos(atan(SPS_S))
-k,KP0+4, 0,2.5*SPS_TP-(2.5*SPS_TP)*sin(atan(SPS_S)),-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)+(2.5*SPS_TP)*cos(atan(SPS_S))
+k,KP0+1,0,SPS_W-(1.5*SPS_TP)+(1.5*SPS_TP)*sin(atan(SPS_S)),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)-(1.5*SPS_TP)*cos(atan(SPS_S))
+k,KP0+2,0,SPS_W-(1.5*SPS_TP)+(2.5*SPS_TP)*sin(atan(SPS_S)),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)-(2.5*SPS_TP)*cos(atan(SPS_S))
+k,KP0+3,0,2.5*SPS_TP-(1.5*SPS_TP)*sin(atan(SPS_S)),-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)+(1.5*SPS_TP)*cos(atan(SPS_S))
+k,KP0+4,0,2.5*SPS_TP-(2.5*SPS_TP)*sin(atan(SPS_S)),-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)+(2.5*SPS_TP)*cos(atan(SPS_S))
 lsel,none
+
 l,KP0+1,KP0+2
 l,KP0+2,KP0+3
 l,KP0+3,KP0+4
 l,KP0+4,KP0+1
+
 asel,none
 al,all
-
 wprota,0,-90,0
 wpoffs,,,SPS_W/2
 asbw,all,sepo
 wpcsys
-
 cm,A_VOL_SPS_TP_3,area
 
 
-! nose radius
+! top plate part 4
 *get,KP0,kp,,num,max
-k,KP0+1, 0,2.5*SPS_TP,-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2) ! centre
-k,KP0+2, 0,2.5*SPS_TP-(1.5*SPS_TP)*sin(atan(SPS_S)),-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)+(1.5*SPS_TP)*cos(atan(SPS_S))
-k,KP0+3, 0,SPS_TP,-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)
-k,KP0+4, 0,0,-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)
-k,KP0+5, 0,2.5*SPS_TP-(2.5*SPS_TP)*sin(atan(SPS_S)),-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)+(2.5*SPS_TP)*cos(atan(SPS_S))
+k,KP0+1,0,2.5*SPS_TP,-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2) ! arc centre
+k,KP0+2,0,2.5*SPS_TP-(1.5*SPS_TP)*sin(atan(SPS_S)),-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)+(1.5*SPS_TP)*cos(atan(SPS_S))
+k,KP0+3,0,SPS_TP,-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)
+k,KP0+4,0,0,-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)
+k,KP0+5,0,2.5*SPS_TP-(2.5*SPS_TP)*sin(atan(SPS_S)),-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)+(2.5*SPS_TP)*cos(atan(SPS_S))
+
 lsel,none
 larc,KP0+2,KP0+3,KP0+1,1.5*SPS_TP
 l,KP0+3,KP0+4
 larc,KP0+4,KP0+5,KP0+1,2.5*SPS_TP
 l,KP0+5,KP0+2
+
 asel,none
 al,all
-
 cm,A_VOL_SPS_TP_4,area
 
 
-! front
+! top plate part 5
 *get,KP0,kp,,num,max
-k,KP0+1, 0,SPS_TP,-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)
-k,KP0+2, 0,SPS_TP,-SPS_H+SPS_W*SPS_S+(SPS_PL_LAP+SPS_PL_GAP)
-k,KP0+3, 0,0,-SPS_H+SPS_W*SPS_S+(SPS_PL_LAP+SPS_PL_GAP)
-k,KP0+4, 0,0,-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)
+k,KP0+1,0,SPS_TP,-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)
+k,KP0+2,0,SPS_TP,-SPS_H+SPS_W*SPS_S+(SPS_LAP+SPS_GAP)
+k,KP0+3,0,0,-SPS_H+SPS_W*SPS_S+(SPS_LAP+SPS_GAP)
+k,KP0+4,0,0,-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)
+
 lsel,none
 l,KP0+1,KP0+2
 l,KP0+2,KP0+3
 l,KP0+3,KP0+4
 l,KP0+4,KP0+1
+
 asel,none
 al,all
-
 wprota,0,0,0
 wpoffs,,,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)
 asbw,all
 wpcsys
 wprota,0,0,0
-wpoffs,,,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-SPS_PL_LAP
+wpoffs,,,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-SPS_LAP
 asbw,all
 wpcsys
 wprota,0,0,0
-wpoffs,,,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(SPS_PL_LAP+SPS_PL_GAP)
+wpoffs,,,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(SPS_LAP+SPS_GAP)
 asbw,all
 wpcsys
-
 wprota,0,0,0
-wpoffs,,,-SPS_H+SPS_S*SPS_W+BRK_BB_Z
+wpoffs,,,-SPS_H+SPS_S*SPS_W+BRK_BZ
 asbw,all
-*if,BRK_BB_SPV,ne,0,then
-    wpoffs,,,BRK_BB_SPV
+*if,BRK_BSV,ne,0,then
+    wpoffs,,,BRK_BSV
     asbw,all
 *endif
 wpcsys
-
 cm,A_VOL_SPS_TP_5,area
 
 
-
-! CORE / EDGE BAR SECTION
-
-! heel
+! core part 1
 *get,KP0,kp,,num,max
-k,KP0+1, 0,SPS_W-(1.5*SPS_TP),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2) ! centre
-k,KP0+2, 0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)
-k,KP0+3, 0,SPS_W+SPS_TP,SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)
-k,KP0+4, 0,SPS_W+SPS_TP,(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)
-k,KP0+5, 0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP)+(1.5*SPS_BP)*sin(atan(SPS_S)),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)-(1.5*SPS_BP)*cos(atan(SPS_S))
-k,KP0+6, 0,SPS_W-(1.5*SPS_TP)+(2.5*SPS_TP)*sin(atan(SPS_S)),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)-(2.5*SPS_TP)*cos(atan(SPS_S))
+k,KP0+1,0,SPS_W-(1.5*SPS_TP),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2) ! centre
+k,KP0+2,0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)
+k,KP0+3,0,SPS_W+SPS_TP,SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)
+k,KP0+4,0,SPS_W+SPS_TP,(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)
+k,KP0+5,0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP)+(1.5*SPS_BP)*sin(atan(SPS_S)),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)-(1.5*SPS_BP)*cos(atan(SPS_S))
+k,KP0+6,0,SPS_W-(1.5*SPS_TP)+(2.5*SPS_TP)*sin(atan(SPS_S)),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)-(2.5*SPS_TP)*cos(atan(SPS_S))
+
 lsel,none
 l,KP0+3,KP0+4
 larc,KP0+4,KP0+5,KP0+2,1.5*SPS_BP
 l,KP0+5,KP0+6
 larc,KP0+6,KP0+3,KP0+1,2.5*SPS_TP
+
 asel,none
 al,all
-
 cm,A_VOL_SPS_CORE_1,area
 
 
-! tread
-*get,KP0,kp,,num,max
-k,KP0+1, 0,SPS_W-(1.5*SPS_TP)+(2.5*SPS_TP)*sin(atan(SPS_S)),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)-(2.5*SPS_TP)*cos(atan(SPS_S))
-k,KP0+2, 0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP)+(1.5*SPS_BP)*sin(atan(SPS_S)),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)-(1.5*SPS_BP)*cos(atan(SPS_S))
-k,KP0+4, 0,2.5*SPS_TP-(1.5*SPS_TP)*sin(atan(SPS_S)),-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)+(1.5*SPS_TP)*cos(atan(SPS_S))
-k,KP0+3, 0,SPS_TP+SPS_BP+(1.5*SPS_BP)-(2.5*SPS_BP)*sin(atan(SPS_S)),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)+(2.5*SPS_BP)*cos(atan(SPS_S))
-lsel,none
-l,KP0+1,KP0+2
-l,KP0+2,KP0+3
-l,KP0+3,KP0+4
-l,KP0+4,KP0+1
-asel,none
-al,all
-
-wprota,0,-90,0
-wpoffs,,,SPS_W/2
-asbw,all,sepo
-wpcsys
-
-cm,A_VOL_SPS_CORE_2,area
-
-
-! nose
-*get,KP0,kp,,num,max
-k,KP0+1, 0,2.5*SPS_TP,-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2) ! centre
-k,KP0+2, 0,SPS_TP+SPS_BP+(1.5*SPS_BP),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2) ! centre
-k,KP0+3, 0,2.5*SPS_TP-(1.5*SPS_TP)*sin(atan(SPS_S)),-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)+(1.5*SPS_TP)*cos(atan(SPS_S))
-k,KP0+4, 0,SPS_TP+SPS_BP+(1.5*SPS_BP)-(2.5*SPS_BP)*sin(atan(SPS_S)),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)+(2.5*SPS_BP)*cos(atan(SPS_S))
-k,KP0+5, 0,SPS_TP,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)
-k,KP0+6, 0,SPS_TP,-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)
-lsel,none
-l,KP0+3,KP0+4
-larc,KP0+4,KP0+5,KP0+2,2.5*SPS_BP
-l,KP0+5,KP0+6
-larc,KP0+6,KP0+3,KP0+1,1.5*SPS_TP
-asel,none
-al,all
-
-cm,A_VOL_SPS_CORE_3,area
-
-
-
-! BOTTOM PLATE SECTION
-
-! upper
-*get,KP0,kp,,num,max
-k,KP0+1, 0,SPS_W+SPS_TP+SPS_BP,SPS_H+(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(SPS_PL_LAP+SPS_PL_GAP)
-k,KP0+2, 0,SPS_W+SPS_TP+SPS_BP,(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)
-k,KP0+3, 0,SPS_W+SPS_TP,(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)
-k,KP0+4, 0,SPS_W+SPS_TP,SPS_H+(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(SPS_PL_LAP+SPS_PL_GAP)
-lsel,none
-l,KP0+1,KP0+2
-l,KP0+2,KP0+3
-l,KP0+3,KP0+4
-l,KP0+4,KP0+1
-asel,none
-al,all
-
-wprota,0,0,0
-wpoffs,,,SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)
-asbw,all
-wpcsys
-wprota,0,0,0
-wpoffs,,,SPS_W*SPS_S+SPS_PL_LAP
-asbw,all
-wpcsys
-wprota,0,0,0
-wpoffs,,,SPS_W*SPS_S+(SPS_PL_LAP+SPS_PL_GAP)
-asbw,all
-wpcsys
-
-wprota,0,0,0
-wpoffs,,,SPS_S*SPS_W+BRK_BB_Z
-asbw,all
-*if,BRK_BB_SPV,ne,0,then
-    wpoffs,,,BRK_BB_SPV
-    asbw,all
-*endif
-wpcsys
-
-cm,A_VOL_SPS_BP_1,area
-
-
-! heel radius
-*get,KP0,kp,,num,max
-k,KP0+1, 0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2) ! centre
-k,KP0+2, 0,SPS_W+SPS_TP+SPS_BP,(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)
-k,KP0+3, 0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP)+(2.5*SPS_BP)*sin(atan(SPS_S)),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)-(2.5*SPS_BP)*cos(atan(SPS_S))
-k,KP0+4, 0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP)+(1.5*SPS_BP)*sin(atan(SPS_S)),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)-(1.5*SPS_BP)*cos(atan(SPS_S))
-k,KP0+5, 0,SPS_W+SPS_TP,(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)
-lsel,none
-larc,KP0+2,KP0+3,KP0+1,2.5*SPS_BP
-l,KP0+3,KP0+4
-larc,KP0+4,KP0+5,KP0+1,1.5*SPS_BP
-l,KP0+5,KP0+2
-asel,none
-al,all
-
-cm,A_VOL_SPS_BP_2,area
-
-
-! bottom
-*get,KP0,kp,,num,max
-k,KP0+1, 0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP)+(1.5*SPS_BP)*sin(atan(SPS_S)),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)-(1.5*SPS_BP)*cos(atan(SPS_S))
-k,KP0+2, 0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP)+(2.5*SPS_BP)*sin(atan(SPS_S)),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)-(2.5*SPS_BP)*cos(atan(SPS_S))
-k,KP0+3, 0,SPS_TP+SPS_BP+(1.5*SPS_BP)-(1.5*SPS_BP)*sin(atan(SPS_S)),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)+(1.5*SPS_BP)*cos(atan(SPS_S))
-k,KP0+4, 0,SPS_TP+SPS_BP+(1.5*SPS_BP)-(2.5*SPS_BP)*sin(atan(SPS_S)),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)+(2.5*SPS_BP)*cos(atan(SPS_S))
-lsel,none
-l,KP0+1,KP0+2
-l,KP0+2,KP0+3
-l,KP0+3,KP0+4
-l,KP0+4,KP0+1
-asel,none
-al,all
-
-wprota,0,-90,0
-wpoffs,,,SPS_W/2
-asbw,all,sepo
-wpcsys
-
-cm,A_VOL_SPS_BP_3,area
-
-
-! nose radius
-*get,KP0,kp,,num,max
-k,KP0+1, 0,SPS_TP+SPS_BP+(1.5*SPS_BP),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2) ! centre
-k,KP0+2, 0,SPS_TP+SPS_BP+(1.5*SPS_BP)-(1.5*SPS_BP)*sin(atan(SPS_S)),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)+(1.5*SPS_BP)*cos(atan(SPS_S))
-k,KP0+3, 0,SPS_TP+SPS_BP,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)
-k,KP0+4, 0,SPS_TP,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)
-k,KP0+5, 0,SPS_TP+SPS_BP+(1.5*SPS_BP)-(2.5*SPS_BP)*sin(atan(SPS_S)),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)+(2.5*SPS_BP)*cos(atan(SPS_S))
-lsel,none
-larc,KP0+2,KP0+3,KP0+1,1.5*SPS_BP
-l,KP0+3,KP0+4
-larc,KP0+4,KP0+5,KP0+1,2.5*SPS_BP
-l,KP0+5,KP0+2
-asel,none
-al,all
-
-cm,A_VOL_SPS_BP_4,area
-
-
-! front
-*get,KP0,kp,,num,max
-k,KP0+1, 0,SPS_TP+SPS_BP,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)
-k,KP0+2, 0,SPS_TP+SPS_BP,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-SPS_PL_LAP
-k,KP0+3, 0,SPS_TP,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-SPS_PL_LAP
-k,KP0+4, 0,SPS_TP,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)
-lsel,none
-l,KP0+1,KP0+2
-l,KP0+2,KP0+3
-l,KP0+3,KP0+4
-l,KP0+4,KP0+1
-asel,none
-al,all
-
-cm,A_VOL_SPS_BP_5,area
-
-
-
-! COMPONENTS
-
+! top plate
 asel,none
 *do,H,1,5
     cmsel,a,A_VOL_SPS_TP_%H%
 *enddo
 cm,A_VOL_SPS_TP,area
 
+
+! core part 2
+*get,KP0,kp,,num,max
+k,KP0+1,0,SPS_W-(1.5*SPS_TP)+(2.5*SPS_TP)*sin(atan(SPS_S)),SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)-(2.5*SPS_TP)*cos(atan(SPS_S))
+k,KP0+2,0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP)+(1.5*SPS_BP)*sin(atan(SPS_S)),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)-(1.5*SPS_BP)*cos(atan(SPS_S))
+k,KP0+4,0,2.5*SPS_TP-(1.5*SPS_TP)*sin(atan(SPS_S)),-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)+(1.5*SPS_TP)*cos(atan(SPS_S))
+k,KP0+3,0,SPS_TP+SPS_BP+(1.5*SPS_BP)-(2.5*SPS_BP)*sin(atan(SPS_S)),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)+(2.5*SPS_BP)*cos(atan(SPS_S))
+
+lsel,none
+l,KP0+1,KP0+2
+l,KP0+2,KP0+3
+l,KP0+3,KP0+4
+l,KP0+4,KP0+1
+
+asel,none
+al,all
+wprota,0,-90,0
+wpoffs,,,SPS_W/2
+asbw,all,sepo
+wpcsys
+cm,A_VOL_SPS_CORE_2,area
+
+
+! core part 3
+*get,KP0,kp,,num,max
+k,KP0+1,0,2.5*SPS_TP,-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2) ! centre
+k,KP0+2,0,SPS_TP+SPS_BP+(1.5*SPS_BP),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2) ! centre
+k,KP0+3,0,2.5*SPS_TP-(1.5*SPS_TP)*sin(atan(SPS_S)),-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)+(1.5*SPS_TP)*cos(atan(SPS_S))
+k,KP0+4,0,SPS_TP+SPS_BP+(1.5*SPS_BP)-(2.5*SPS_BP)*sin(atan(SPS_S)),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)+(2.5*SPS_BP)*cos(atan(SPS_S))
+k,KP0+5,0,SPS_TP,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)
+k,KP0+6,0,SPS_TP,-(2.5*SPS_TP)*tan(45-atan(SPS_S)/2)
+
+lsel,none
+l,KP0+3,KP0+4
+larc,KP0+4,KP0+5,KP0+2,2.5*SPS_BP
+l,KP0+5,KP0+6
+larc,KP0+6,KP0+3,KP0+1,1.5*SPS_TP
+
+asel,none
+al,all
+cm,A_VOL_SPS_CORE_3,area
+
+
+! core
 asel,none
 *do,H,1,3
     cmsel,a,A_VOL_SPS_CORE_%H%
 *enddo
 cm,A_VOL_SPS_CORE,area
 
+
+! bottom plate part 1
+*get,KP0,kp,,num,max
+k,KP0+1,0,SPS_W+SPS_TP+SPS_BP,SPS_H+(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(SPS_LAP+SPS_GAP)
+k,KP0+2,0,SPS_W+SPS_TP+SPS_BP,(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)
+k,KP0+3,0,SPS_W+SPS_TP,(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)
+k,KP0+4,0,SPS_W+SPS_TP,SPS_H+(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(SPS_LAP+SPS_GAP)
+
+lsel,none
+l,KP0+1,KP0+2
+l,KP0+2,KP0+3
+l,KP0+3,KP0+4
+l,KP0+4,KP0+1
+
+asel,none
+al,all
+wprota,0,0,0
+wpoffs,,,SPS_W*SPS_S+(1.5*SPS_TP)*tan(45-atan(SPS_S)/2)
+asbw,all
+wpcsys
+wprota,0,0,0
+wpoffs,,,SPS_W*SPS_S+SPS_LAP
+asbw,all
+wpcsys
+wprota,0,0,0
+wpoffs,,,SPS_W*SPS_S+(SPS_LAP+SPS_GAP)
+asbw,all
+wpcsys
+wprota,0,0,0
+wpoffs,,,SPS_S*SPS_W+BRK_BZ
+asbw,all
+*if,BRK_BSV,ne,0,then
+    wpoffs,,,BRK_BSV
+    asbw,all
+*endif
+wpcsys
+cm,A_VOL_SPS_BP_1,area
+
+
+! bottom plate part 2
+*get,KP0,kp,,num,max
+k,KP0+1,0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2) ! centre
+k,KP0+2,0,SPS_W+SPS_TP+SPS_BP,(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)
+k,KP0+3,0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP)+(2.5*SPS_BP)*sin(atan(SPS_S)),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)-(2.5*SPS_BP)*cos(atan(SPS_S))
+k,KP0+4,0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP)+(1.5*SPS_BP)*sin(atan(SPS_S)),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)-(1.5*SPS_BP)*cos(atan(SPS_S))
+k,KP0+5,0,SPS_W+SPS_TP,(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)
+
+lsel,none
+larc,KP0+2,KP0+3,KP0+1,2.5*SPS_BP
+l,KP0+3,KP0+4
+larc,KP0+4,KP0+5,KP0+1,1.5*SPS_BP
+l,KP0+5,KP0+2
+
+asel,none
+al,all
+cm,A_VOL_SPS_BP_2,area
+
+
+! bottom plate part 3
+*get,KP0,kp,,num,max
+k,KP0+1,0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP)+(1.5*SPS_BP)*sin(atan(SPS_S)),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)-(1.5*SPS_BP)*cos(atan(SPS_S))
+k,KP0+2,0,SPS_W+SPS_TP+SPS_BP-(2.5*SPS_BP)+(2.5*SPS_BP)*sin(atan(SPS_S)),(SPS_W+SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))+(2.5*SPS_BP)*tan(45-atan(SPS_S)/2)-(2.5*SPS_BP)*cos(atan(SPS_S))
+k,KP0+3,0,SPS_TP+SPS_BP+(1.5*SPS_BP)-(1.5*SPS_BP)*sin(atan(SPS_S)),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)+(1.5*SPS_BP)*cos(atan(SPS_S))
+k,KP0+4,0,SPS_TP+SPS_BP+(1.5*SPS_BP)-(2.5*SPS_BP)*sin(atan(SPS_S)),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)+(2.5*SPS_BP)*cos(atan(SPS_S))
+
+lsel,none
+l,KP0+1,KP0+2
+l,KP0+2,KP0+3
+l,KP0+3,KP0+4
+l,KP0+4,KP0+1
+
+asel,none
+al,all
+wprota,0,-90,0
+wpoffs,,,SPS_W/2
+asbw,all,sepo
+wpcsys
+cm,A_VOL_SPS_BP_3,area
+
+
+! bottom plate part 4
+*get,KP0,kp,,num,max
+k,KP0+1,0,SPS_TP+SPS_BP+(1.5*SPS_BP),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2) ! centre
+k,KP0+2,0,SPS_TP+SPS_BP+(1.5*SPS_BP)-(1.5*SPS_BP)*sin(atan(SPS_S)),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)+(1.5*SPS_BP)*cos(atan(SPS_S))
+k,KP0+3,0,SPS_TP+SPS_BP,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)
+k,KP0+4,0,SPS_TP,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)
+k,KP0+5,0,SPS_TP+SPS_BP+(1.5*SPS_BP)-(2.5*SPS_BP)*sin(atan(SPS_S)),(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)+(2.5*SPS_BP)*cos(atan(SPS_S))
+
+lsel,none
+larc,KP0+2,KP0+3,KP0+1,1.5*SPS_BP
+l,KP0+3,KP0+4
+larc,KP0+4,KP0+5,KP0+1,2.5*SPS_BP
+l,KP0+5,KP0+2
+
+asel,none
+al,all
+cm,A_VOL_SPS_BP_4,area
+
+
+! bottom plate part 5
+*get,KP0,kp,,num,max
+k,KP0+1,0,SPS_TP+SPS_BP,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)
+k,KP0+2,0,SPS_TP+SPS_BP,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-SPS_LAP
+k,KP0+3,0,SPS_TP,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-SPS_LAP
+k,KP0+4,0,SPS_TP,(SPS_TP+SPS_BP)*SPS_S-(SPS_TP+SPS_CORE+SPS_BP)/cos(atan(SPS_S))-(1.5*SPS_BP)*tan(45-atan(SPS_S)/2)
+
+lsel,none
+l,KP0+1,KP0+2
+l,KP0+2,KP0+3
+l,KP0+3,KP0+4
+l,KP0+4,KP0+1
+
+asel,none
+al,all
+cm,A_VOL_SPS_BP_5,area
+
+
+! bottom plate
 asel,none
 *do,H,1,5
     cmsel,a,A_VOL_SPS_BP_%H%
 *enddo
 cm,A_VOL_SPS_BP,area
 
-
-
-! EXTRUDE
 
 ! extrude
 *do,H,1,5
@@ -368,12 +366,12 @@ cm,A_VOL_SPS_BP,area
     vsel,none
     vext,all,,,SPS_L
 
-    *do,I,1,N_BRK
+    *do,I,1,BRK_N
         wprota,90,90,0
-        wpoffs,,,BRK_X%I%-BRK_BB_SPH/2
+        wpoffs,,,BRK_X(I)-BRK_BSH/2
         vsbw,all
-        *if,BRK_BB_SPH,ne,0,then
-            wpoffs,,,BRK_BB_SPH
+        *if,BRK_BSH,ne,0,then
+            wpoffs,,,BRK_BSH
             vsbw,all
         *endif
         wpcsys
@@ -388,12 +386,12 @@ cm,A_VOL_SPS_BP,area
     vsel,none
     vext,all,,,SPS_L
 
-    *do,I,1,N_BRK
+    *do,I,1,BRK_N
         wprota,90,90,0
-        wpoffs,,,BRK_X%I%-BRK_BB_SPH/2
+        wpoffs,,,BRK_X(I)-BRK_BSH/2
         vsbw,all
-        *if,BRK_BB_SPH,ne,0,then
-            wpoffs,,,BRK_BB_SPH
+        *if,BRK_BSH,ne,0,then
+            wpoffs,,,BRK_BSH
             vsbw,all
         *endif
         wpcsys
@@ -408,12 +406,12 @@ cm,A_VOL_SPS_BP,area
     vsel,none
     vext,all,,,SPS_L
 
-    *do,I,1,N_BRK
+    *do,I,1,BRK_N
         wprota,90,90,0
-        wpoffs,,,BRK_X%I%-BRK_BB_SPH/2
+        wpoffs,,,BRK_X(I)-BRK_BSH/2
         vsbw,all
-        *if,BRK_BB_SPH,ne,0,then
-            wpoffs,,,BRK_BB_SPH
+        *if,BRK_BSH,ne,0,then
+            wpoffs,,,BRK_BSH
             vsbw,all
         *endif
         wpcsys
@@ -423,35 +421,30 @@ cm,A_VOL_SPS_BP,area
 *enddo
 
 
-! components
+! sps component
+!---------------------------------------
+
+! terrace
 vsel,none
 *do,H,1,5
     cmsel,a,V_SPS_TP_%H%
 *enddo
+vatt,MAT_STEEL,RCO_DUMMY,ETY_SOLID
 cm,V_SPS_TP,volu
 
 vsel,none
 *do,H,1,3
     cmsel,a,V_SPS_CORE_%H%
 *enddo
+vatt,MAT_ELAST,RCO_DUMMY,ETY_SOLID
 cm,V_SPS_CORE,volu
 
 vsel,none
 *do,H,1,5
     cmsel,a,V_SPS_BP_%H%
 *enddo
-cm,V_SPS_BP,volu
-
-
-! material
-vsel,none
-cmsel,a,V_SPS_TP
-cmsel,a,V_SPS_BP
 vatt,MAT_STEEL,RCO_DUMMY,ETY_SOLID
-
-vsel,none
-cmsel,a,V_SPS_CORE
-vatt,MAT_ELAST,RCO_DUMMY,ETY_SOLID
+cm,V_SPS_BP,volu
 
 vsel,none
 cmsel,a,V_SPS_TP
@@ -461,8 +454,8 @@ cm,V_SPS,volu
 
 
 ! generate and merge geometry
-vsel,none
-vsel,a,loc,y,0,SPS_W/2
+cmsel,s,V_SPS
+vsel,r,loc,y,0,SPS_W/2
 vgen,1,all,,,0,SPS_W,SPS_H,,,1
 
 vsel,all
@@ -476,49 +469,47 @@ nummrg,kp,TOL
 ! seat brackets
 !---------------------------------------
 
-! BRACKET
-
 ! baseplate
 *get,KP0,kp,,num,max
-k,KP0+1, BRK_X1-BRK_W/2,SPS_W,SPS_S*SPS_W+BRK_Z
-k,KP0+2, BRK_X1+BRK_W/2,SPS_W,SPS_S*SPS_W+BRK_Z
-k,KP0+3, BRK_X1+BRK_W/2,SPS_W,SPS_S*SPS_W+BRK_Z+BRK_H
-k,KP0+4, BRK_X1-BRK_W/2,SPS_W,SPS_S*SPS_W+BRK_Z+BRK_H
+k,KP0+1,BRK_X(1)-BRK_W/2,SPS_W,SPS_S*SPS_W+BRK_Z
+k,KP0+2,BRK_X(1)+BRK_W/2,SPS_W,SPS_S*SPS_W+BRK_Z
+k,KP0+3,BRK_X(1)+BRK_W/2,SPS_W,SPS_S*SPS_W+BRK_Z+BRK_H
+k,KP0+4,BRK_X(1)-BRK_W/2,SPS_W,SPS_S*SPS_W+BRK_Z+BRK_H
+
 lsel,none
 l,KP0+1,KP0+2
 l,KP0+2,KP0+3
 l,KP0+3,KP0+4
 l,KP0+4,KP0+1
+
 asel,none
 al,all
-
 wprota,90,90,0
-wpoffs,,,BRK_X1-BRK_BB_SPH/2
+wpoffs,,,BRK_X(1)-BRK_BSH/2
 asbw,all
-*if,BRK_BB_SPH,ne,0,then
-    wpoffs,,,BRK_BB_SPH
+*if,BRK_BSH,ne,0,then
+    wpoffs,,,BRK_BSH
     asbw,all
 *endif
 wpcsys
 wprota,0,0,0
-wpoffs,,,SPS_S*SPS_W+BRK_BB_Z
+wpoffs,,,SPS_S*SPS_W+BRK_BZ
 asbw,all
-*if,BRK_BB_SPV,ne,0,then
-    wpoffs,,,BRK_BB_SPV
+*if,BRK_BSV,ne,0,then
+    wpoffs,,,BRK_BSV
     asbw,all
 *endif
 wpcsys
-
-*if,BRK_BB_SPH,eq,0,then
+*if,BRK_BSH,eq,0,then
     wprota,90,90,0
-    wpoffs,,,BRK_X1-BRK_W/2+BRK_ST_T/2
+    wpoffs,,,BRK_X(1)-BRK_W/2+BRK_ST_T/2
     asbw,all
     wpoffs,,,BRK_ST_T/2
     asbw,all
     wpcsys
 *else
     wprota,90,90,0
-    wpoffs,,,BRK_X1-BRK_ST_T/2
+    wpoffs,,,BRK_X(1)-BRK_ST_T/2
     asbw,all
     wpoffs,,,BRK_ST_T/2
     asbw,all
@@ -526,36 +517,33 @@ wpcsys
     asbw,all
     wpcsys
 *endif
-
 cm,A_VOL_BRK_PL,area
 
 
 ! stanchion
 *get,KP0,kp,,num,max
-*if,BRK_BB_SPH,eq,0,then
-    k,KP0+1, BRK_X1-BRK_W/2,SPS_W-BRK_T,SPS_S*SPS_W+BRK_Z
-    k,KP0+2, BRK_X1-BRK_W/2,SPS_W-BRK_ST_L,SPS_S*SPS_W+BRK_Z
-    k,KP0+3, BRK_X1-BRK_W/2,SPS_W-BRK_ST_L,SPS_S*SPS_W+BRK_Z+BRK_H
-    k,KP0+4, BRK_X1-BRK_W/2,SPS_W-BRK_T,SPS_S*SPS_W+BRK_Z+BRK_H
+*if,BRK_BSH,eq,0,then
+    k,KP0+1,BRK_X(1)-BRK_W/2,SPS_W-BRK_T,SPS_S*SPS_W+BRK_Z
+    k,KP0+2,BRK_X(1)-BRK_W/2,SPS_W-BRK_ST_L,SPS_S*SPS_W+BRK_Z
+    k,KP0+3,BRK_X(1)-BRK_W/2,SPS_W-BRK_ST_L,SPS_S*SPS_W+BRK_Z+BRK_H
+    k,KP0+4,BRK_X(1)-BRK_W/2,SPS_W-BRK_T,SPS_S*SPS_W+BRK_Z+BRK_H
 *else
-    k,KP0+1, BRK_X1-BRK_ST_T/2,SPS_W-BRK_T,SPS_S*SPS_W+BRK_Z
-    k,KP0+2, BRK_X1-BRK_ST_T/2,SPS_W-BRK_ST_L,SPS_S*SPS_W+BRK_Z
-    k,KP0+3, BRK_X1-BRK_ST_T/2,SPS_W-BRK_ST_L,SPS_S*SPS_W+BRK_Z+BRK_H
-    k,KP0+4, BRK_X1-BRK_ST_T/2,SPS_W-BRK_T,SPS_S*SPS_W+BRK_Z+BRK_H
+    k,KP0+1,BRK_X(1)-BRK_ST_T/2,SPS_W-BRK_T,SPS_S*SPS_W+BRK_Z
+    k,KP0+2,BRK_X(1)-BRK_ST_T/2,SPS_W-BRK_ST_L,SPS_S*SPS_W+BRK_Z
+    k,KP0+3,BRK_X(1)-BRK_ST_T/2,SPS_W-BRK_ST_L,SPS_S*SPS_W+BRK_Z+BRK_H
+    k,KP0+4,BRK_X(1)-BRK_ST_T/2,SPS_W-BRK_T,SPS_S*SPS_W+BRK_Z+BRK_H
 *endif
+
 lsel,none
 l,KP0+1,KP0+2
 l,KP0+2,KP0+3
 l,KP0+3,KP0+4
 l,KP0+4,KP0+1
+
 asel,none
 al,all
-
 cm,A_VOL_BRK_ST,area
 
-
-
-! EXTRUDE
 
 ! extrude
 asel,none
@@ -568,18 +556,16 @@ asel,none
 cmsel,a,A_VOL_BRK_ST
 vsel,none
 vext,all,,,BRK_ST_T
-
-*if,BRK_BB_SPH,ne,0,then
+*if,BRK_BSH,ne,0,then
     wprota,90,90,0
-    wpoffs,,,BRK_X1
+    wpoffs,,,BRK_X(1)
     vsbw,all
     wpcsys
 *endif
-
 cm,V_BRK_ST,volu
 
 
-! compnents
+! component
 vsel,none
 cmsel,a,V_BRK_PL
 cmsel,a,V_BRK_ST
@@ -587,20 +573,15 @@ aslv
 lsla
 ksll
 nummrg,kp,TOL
+vatt,MAT_RIGID,RCO_DUMMY,ETY_SOLID
 cm,V_BRK_1,volu
 
 
-! material
-vsel,none
-cmsel,a,V_BRK_1
-vatt,MAT_STEEL,RCO_DUMMY,ETY_SOLID
-
-
-! generate and merge geometry
-*do,I,2,N_BRK
+! generate geometry
+*do,I,2,BRK_N
     vsel,none
     cmsel,a,V_BRK_1
-    vgen,2,all,,,BRK_X%I%-BRK_X1
+    vgen,2,all,,,BRK_X(I)-BRK_X(1)
     cmsel,u,V_BRK_1
     cm,V_BRK_%I%,volu
 *enddo

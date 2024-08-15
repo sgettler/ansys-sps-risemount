@@ -25,10 +25,10 @@ Parameters for modifying the model geometry are found in the
 |SPS_TP|tread top faceplate thickness|
 |SPS_CORE|tread core thickness|
 |SPS_BP|tread bottom faceplate thickness|
+|SPS_S|tread slope as rise/run ratio|
 |SPS_L|terrace length|
 |SPS_W|tread width|
 |SPS_H|rise height nose to nose|
-|SPS_S|tread slope as rise/run ratio|
 
 ###### Seat Bracket Baseplate Dimensions
 |Name|Description|
@@ -39,10 +39,10 @@ Parameters for modifying the model geometry are found in the
 |BRK_H|bracket baseplate height|
 |BRK_T|bracket baseplate thickness|
 |BRK_Z|elevation of baseplate above the heel of the terrace|
-|BRK_BB_Z|elevation of the bottom row of bolts above the heel of the terrace|
-|BRK_BB_SPV|vertical spacing between rows of bolts; if value is 0, only one row is created|
-|BRK_BB_SPH|horizontal spacing between columns of bolts; if value is 0, only one column is created|
+|BRK_BZ|elevation of the bottom row of bolts above the heel of the terrace|
+|BRK_BSV|vertical spacing between rows of bolts; if value is 0, only one row is created|
+|BRK_BSH|horizontal spacing between columns of bolts; if value is 0, only one column is created|
 
 Parameters for the loading are found in the `00-02-loadparams.inp` file. The
-default loading is 120plf per ICC-300, converted to N/m. Loads are
-automatically distributed to the stanchions based on bracket spacing.
+default loading is 120plf per ICC-300. Loads are automatically distributed to
+the stanchions based on bracket spacing.

@@ -2,19 +2,17 @@
 ! ATTRIBUTES
 !---------------------------------------
 
-
 ! material definitions
 !---------------------------------------
 
 *get,MAT0,mat,0,num,max
 
 MAT_STEEL = MAT0+1
-mp,ex,MAT_STEEL,206000/CONV**2          ! N/mm2
-mp,dens,MAT_STEEL,0.000007850/CONV**3   ! kg/mm3
+mp,ex,MAT_STEEL,206000/CONV**2              ! N/mm2
+mp,dens,MAT_STEEL,0.000007850/CONV**3       ! kg/mm3
 mp,nuxy,MAT_STEEL,0.287
 mp,alpx,MAT_STEEL,0.0000116
 
-! steel nonlinear
 tb,miso,MAT_STEEL,1,17
 tbpt,,1.141000000e-03,235.000000/CONV**2
 tbpt,,2.117902800e-02,255.511368/CONV**2
@@ -35,15 +33,25 @@ tbpt,,0.154506869,    395.933080/CONV**2
 tbpt,,0.200443964,    400.000000/CONV**2
 
 MAT_ELAST = MAT0+2
-mp,ex,MAT_ELAST,750/CONV**2             ! N/mm2
-mp,dens,MAT_ELAST,0.000001100/CONV**3   ! kg/mm3
+mp,ex,MAT_ELAST,750/CONV**2                 ! N/mm2
+mp,dens,MAT_ELAST,0.000001100/CONV**3       ! kg/mm3
 mp,nuxy,MAT_ELAST,0.36
 mp,alpx,MAT_ELAST,0.0001500
 
-! elastomer nonlinear
 tb,nlis,MAT_ELAST,1,4
 tbdata,,15/CONV**2,46.29/CONV**2,12.2/CONV**2,65
 
+MAT_ELAST_BC = MAT0+3
+mp,ex,MAT_ELAST_BC,639.7/2/CONV**2          ! N/mm2
+mp,dens,MAT_ELAST_BC,0.000001150/2/CONV**3  ! kg/mm3
+mp,nuxy,MAT_ELAST_BC,0.36
+mp,alpx,MAT_ELAST,0.0001500
+
+MAT_RIGID = MAT0+4
+mp,ex,MAT_RIGID,999999999/CONV**2           ! N/mm2
+mp,dens,MAT_RIGID,0.000007850/CONV**3       ! kg/mm3
+mp,nuxy,MAT_RIGID,0.287
+mp,alpx,MAT_RIGID,0.0000116
 
 MAT0=
 
@@ -64,7 +72,6 @@ keyopt,ETY_CONT,12,0
 ETY_TARG = ETY0+3
 et,ETY_TARG,TARGE170
 
-
 ETY0=
 
 
@@ -76,6 +83,5 @@ ETY0=
 
 RCO_DUMMY = RCO0+1
 r,RCO_DUMMY,-1
-
 
 RCO0=

@@ -5,56 +5,63 @@
 *afun,deg
 
 PROJTITLE = 'SPS Terrace Rise-Mounted Seats'
-PROJFILE = 'risemount'
 
 CONV = 0.001
+IMPCONV = 25.4*CONV
 TOL = 0.001*CONV
 
 
+ESIZE_MAX = 50*CONV
 
-! sps terraces
-!---------------------------------------
-
-! sps
-SPS_TP = 3.2*CONV               ! top plate thickness
-SPS_CORE = 19*CONV              ! core thickness
-SPS_BP = 3.2*CONV               ! bottom plate thickness
 
 
 ! terraces
-SPS_L = 23.5*12*25.4*CONV       ! length
+!---------------------------------------
 
-SPS_W = 33*25.4*CONV            ! tread width
-SPS_H = 18*25.4*CONV            ! rise height
+! sps terrace
+SPS_TP = 4*CONV                 ! top plate thickness
+SPS_CORE = 19*CONV              ! core thickness
+SPS_BP = 4*CONV                 ! bottom plate thickness
+SPS_D = SPS_TP+SPS_CORE+SPS_BP
+
 SPS_S = 0.02                    ! tread slope
 
+SPS_PBAR = 75*CONV
+SPS_GAP = 10*CONV
+SPS_LAP = 40*CONV
 
-! terrace standard values
-SPS_PL_LAP = 40*CONV            ! upturn
-SPS_PL_GAP = 10*CONV            ! upturn gap
+SPS_RBOLT = 75*CONV
+SPS_RBOLTE = 150*CONV
+SPS_RBOLTS = 500*CONV
 
-SPS_RB_EDGE = 25*CONV           ! rise bolt edge distance
-SPS_RB_END = 150*CONV           ! rise bolt end distance
-SPS_RB_SPC = 500*CONV           ! rise bolt max spacing
+SPS_TBOLT = 150*CONV
+SPS_TBOLTE = 50*CONV
+
+
+! geometry
+SPS_L = 8000*CONV               ! length
+SPS_W = 840*CONV                ! tread width
+SPS_H = 450*CONV                ! rise height
 
 
 
 ! seat brackets
 !---------------------------------------
 
-BRK_END = 0                     ! bracket first location (0 = centred in bay)
-BRK_SPC = 21*25.4*CONV          ! bracket spacing
+! baseplate
+BRK_END = 0                     ! first location (0 = pattern centred in bay)
+BRK_SPC = 525*CONV              ! spacing
 
-BRK_W = 3.5*25.4*CONV           ! bracket width
-BRK_H = 4.75*25.4*CONV          ! bracket height
-BRK_T = 0.375*25.4*CONV         ! bracket thickness
-BRK_Z = 1*25.4*CONV             ! bracket bottom elevation
+BRK_W = 90*CONV                 ! baseplate width
+BRK_H = 120*CONV                ! baseplate height
+BRK_T = 10*CONV                 ! baseplate thickness
+BRK_Z = 25*CONV                 ! baseplate bottom elevation
 
-BRK_BB_Z = 3.5*25.4*CONV        ! bracket bolt bottom bolt elevation
-BRK_BB_SPV = 0                  ! bracket bolt vertical spacing (0 = single)
-BRK_BB_SPH = 2.5*25.4*CONV      ! bracket bolt horizontal spacing (0 = single)
+BRK_BZ = 90*CONV                ! bottom bolt elevation
+BRK_BSV = 0                     ! bolt vertical spacing (0 = single)
+BRK_BSH = 65*CONV               ! bolt horizontal spacing (0 = single)
 
 
-! stanchion standard values
-BRK_ST_L = 20*25.4*CONV         ! seat/stanchion length
-BRK_ST_T = 0.375*25.4*CONV      ! stanchion thickness
+! stanchion
+BRK_ST_L = 500*CONV             ! seat/stanchion length
+BRK_ST_T = 10*CONV              ! stanchion thickness

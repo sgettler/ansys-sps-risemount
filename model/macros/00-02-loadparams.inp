@@ -2,9 +2,8 @@
 ! LOADING PARAMETERS
 !---------------------------------------
 
-
-! seat bracket loads
+! seat brackets
 !---------------------------------------
 
 ! icc300 seat load
-LOAD_BRK_LINE = 120*0.454*9.81/12/25.4/CONV     ! uniform load
+LOAD_SEAT = 1750            ! 120 plf
